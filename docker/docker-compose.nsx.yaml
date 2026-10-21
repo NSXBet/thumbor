@@ -16,6 +16,7 @@ services:
       # Local conf: permissive allowlist + file_loader with bundled fixtures.
       - ../conf:/etc/thumbor/conf:ro
       - ../nsx_metrics.py:/etc/thumbor/nsx_metrics.py:ro
+      - ../nsx_upload_compat.py:/etc/thumbor/nsx_upload_compat.py:ro
       - ../docker/fixtures:/fixtures:ro
     command: ["thumbor", "-a", "thumbor_video_engine.app.ThumborServiceApp", "-c", "/etc/thumbor/conf/thumbor.local.conf", "-p", "8888", "-l", "debug"]
     healthcheck:
@@ -35,7 +36,23 @@ services:
       - "--statsd.mapping-config=/etc/statsd-exporter/mappings.conf"
     volumes:
       - ./statsd-mappings.conf:/etc/statsd-exporter/mappings.conf:ro
+  minio:
+    image: alpine/minio:RELEASE.2025-10-15T17-29-55Z
+    # Image runs as uid 100 (minio) but that user can't chown the named
+    # volume; image ships no su-exec. Run as root — local-only stack.
+    user: root
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000" # S3 API
+      - "9001:9001" # Web console (admin/admin)
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio-data:/data
     networks: [local]
+  # Bucket thumbor-media is created by `make minio-init` (host mc binary —
+  # minio/mc docker images are no longer published).
 
   prometheus:
     image: prom/prometheus:v2.53.0
@@ -61,3 +78,6 @@ services:
 
 networks:
   local:
+
+volumes:
+  minio-data:
