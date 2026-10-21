@@ -14,6 +14,7 @@ UPLOAD_ENABLED = True
 UPLOAD_PUT_ALLOWED = True
 UPLOAD_DELETE_ALLOWED = True
 UPLOAD_MAX_SIZE = 0  # no upload size limit (set bytes to cap)
+MAX_ID_LENGTH = 200  # allows nested upload paths (PUT /image/sports/team-jerseys/palmeiras.svg)
 MIN_WIDTH = 1
 MIN_HEIGHT = 1
 # Custom upload handler list: patches video-engine + upload interaction.

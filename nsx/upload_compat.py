@@ -24,6 +24,8 @@ def _patch_validate() -> None:
                 accepts_webp = False
                 format = None
                 filters = ""
+                width = 0
+                height = 0
 
             self.context.request = _ShimRequest()
         return original(self, body)
