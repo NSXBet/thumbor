@@ -27,7 +27,7 @@ ALLOWED_SOURCES = [
 ]
 # --- Loader / Storage ---
 STORAGE = 'thumbor_aws.storage'
-LOADER = 'thumbor.loaders.http_loader'
+LOADER = 'thumbor_aws.loader'  # S3 loader: paths are bucket keys — no external HTTP fetches
 
 # --- Result storage (cache de transformações) ---
 # Key do cache = URL completa (dims+filters+source): cada combinação é um
