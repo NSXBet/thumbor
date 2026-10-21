@@ -25,11 +25,18 @@ ALLOWED_SOURCES = [
     r'.*\.nsxbet\.com\.br',
     r'.*\.betnacional\.bet\.br',
 ]
-
 # --- Loader / Storage ---
+STORAGE = 'thumbor_aws.storage'
 LOADER = 'thumbor.loaders.http_loader'
-STORAGE = 'thumbor.storages.no_storage'
-RESULT_STORAGE = 'thumbor.result_storages.no_storage'
+
+# --- Result storage (cache de transformações) ---
+# Key do cache = URL completa (dims+filters+source): cada combinação é um
+# objeto imutável no S3. 1 ano de TTL — resultado só muda se a URL mudar.
+RESULT_STORAGE = 'thumbor_aws.result_storage'
+RESULT_STORAGE_EXPIRATION_SECONDS = 60 * 60 * 24 * 365  # 1 ano
+AWS_RESULT_STORAGE_BUCKET_NAME = 'thumbor-media-stg'
+AWS_RESULT_STORAGE_ROOT_PATH = '/results'
+AWS_RESULT_STORAGE_REGION_NAME = 'us-east-1'
 
 # --- Engine ---
 ENGINE = 'thumbor_video_engine.engines.video'
@@ -94,9 +101,8 @@ STATSD_PREFIX = 'thumbor'
 # --- S3 storage (thumbor-aws) ---
 # Uploads go to S3 via /image; loader reads originals from the same bucket.
 # Values overridable via env (--use-environment) for bucket/keys per env.
-STORAGE = 'thumbor_aws.storage'
+RESULT_STORAGE_STORES_UNSAFE = True  # cacheia também URLs /unsafe (local/testes)
 UPLOAD_PHOTO_STORAGE = 'thumbor_aws.storage'
-RESULT_STORAGE = 'thumbor.result_storages.no_storage'
 
 AWS_DEFAULT_LOCATION = 'https://{bucket_name}.s3.amazonaws.com'
 AWS_STORAGE_REGION_NAME = 'us-east-1'
