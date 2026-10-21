@@ -108,6 +108,10 @@ For more ways, please check out [Installation](https://thumbor.readthedocs.io/en
 
 ## Development
 
+
+> **NSXBet deployment:** see [`docs/operations.md`](./docs/operations.md) for
+> local stack, media endpoints, caching model (S3 result storage with 1-year
+> TTL), invalidation, and staging deployment steps.
 Sync the development environment, install the pre-commit hooks, and run the
 test suite:
 
