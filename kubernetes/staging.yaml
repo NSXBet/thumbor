@@ -27,6 +27,10 @@ kubernetes:
       dockerfile: docker/Dockerfile.nsx
       imagePullPolicy: Always
       kind: deployment
+      serviceAccount:
+        # IRSA: pod assumes this IAM role — S3 access with NO secrets.
+        # Role policy grants s3:GetObject/PutObject on thumbor-media-stg/*.
+        awsRoleArn: arn:aws:iam::492684252576:role/Thumbor-Staging-EKSServiceAccountRole
       envs:
         - name: APP_ENVIRONMENT
           value: staging
@@ -58,4 +62,4 @@ kubernetes:
             virtualservice:
               gateway: internal-gateway
               hosts:
-                - thumbor-stg.nsx.dev
+                - thumbor.nsx.services
