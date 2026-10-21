@@ -43,10 +43,8 @@ FFMPEG_GIF_AUTO_WEBP = True
 FFMPEG_PATH = '/usr/bin/ffmpeg'
 FFPROBE_PATH = '/usr/bin/ffprobe'
 FFMPEG_GIF_AUTO_H264 = True
-FFMPEG_H264_PRESET = 'medium'
-FFMPEG_H264_CRF = 23
-# MAX_ANIMATED_GIF_PIXELS: gate gif->gif transcodes (0 = disabled). Set to
-# bound memory before enabling heavy gif workloads.
+FFMPEG_H264_PRESET = 'medium'   # ultrafast..veryslow: slower = smaller/better, mais CPU
+FFMPEG_H264_CRF = 23            # quality: 0=sem perda, 18≈visualmente lossless, 23 default, 28=mais comprimido
 MAX_ANIMATED_GIF_PIXELS = 0
 
 # --- Filters ---

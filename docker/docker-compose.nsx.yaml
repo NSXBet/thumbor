@@ -13,6 +13,9 @@ services:
       # Env values are strings; loaded when thumbor runs with --use-environment.
       METRICS: nsx_metrics
       STATSD_HOST: statsd-exporter
+      # ffmpeg H264 quality knobs (thumbor runs with --use-environment):
+      FFMPEG_H264_CRF: "${FFMPEG_H264_CRF:-23}"
+      FFMPEG_H264_PRESET: "${FFMPEG_H264_PRESET:-medium}"
       # thumbor imports METRICS module by name; make /etc/thumbor importable.
       PYTHONPATH: /etc/thumbor
     volumes:
@@ -21,7 +24,7 @@ services:
       - ../nsx_metrics.py:/etc/thumbor/nsx_metrics.py:ro
       - ../nsx_upload_compat.py:/etc/thumbor/nsx_upload_compat.py:ro
       - ../docker/fixtures:/fixtures:ro
-    command: ["thumbor", "-a", "thumbor_video_engine.app.ThumborServiceApp", "-c", "/etc/thumbor/conf/thumbor.local.conf", "-p", "8888", "-l", "debug"]
+    command: ["thumbor", "-a", "thumbor_video_engine.app.ThumborServiceApp", "-c", "/etc/thumbor/conf/thumbor.local.conf", "-p", "8888", "-l", "debug", "--use-environment=true"]
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8888/healthcheck"]
       interval: 5s
