@@ -10,6 +10,9 @@ services:
     ports:
       - "${THUMBOR_PORT:-8888}:8888"
     environment:
+      # Env values are strings; loaded when thumbor runs with --use-environment.
+      METRICS: nsx_metrics
+      STATSD_HOST: statsd-exporter
       # thumbor imports METRICS module by name; make /etc/thumbor importable.
       PYTHONPATH: /etc/thumbor
     volumes:
@@ -36,6 +39,7 @@ services:
       - "--statsd.mapping-config=/etc/statsd-exporter/mappings.conf"
     volumes:
       - ./statsd-mappings.conf:/etc/statsd-exporter/mappings.conf:ro
+    networks: [local]
   minio:
     image: alpine/minio:RELEASE.2025-10-15T17-29-55Z
     # Image runs as uid 100 (minio) but that user can't chown the named
