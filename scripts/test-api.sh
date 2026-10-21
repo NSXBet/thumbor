@@ -28,7 +28,7 @@ GIF_ID=$(echo "$UP_HDR" | sed -n 's|.*Location: /image/\([a-f0-9]*\).*|\1|p' | h
 echo "id: $GIF_ID"
 
 echo "== 4. raw media GET (GET /image/<id>)"
-CT=$(curl -fsS -o /dev/null -w '%{content_type}' "$BASE/image/$GIF_ID/image.gif")
+CT=$(curl -fsS -o /dev/null -w '%{content_type}' "$BASE/image/$GIF_ID")
 [[ "$CT" == "image/gif" ]] || fail "expected image/gif on media GET, got $CT"
 
 echo "== 5. image happy path (resize uploaded JPEG)"
