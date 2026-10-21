@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir \
     "thumbor-aws==1.1.0"
 
 COPY conf/thumbor.conf /etc/thumbor/thumbor.conf
-COPY nsx_metrics.py /etc/thumbor/nsx_metrics.py
+COPY nsx/ /etc/thumbor/nsx/
 ENV PYTHONPATH=/etc/thumbor
 
 EXPOSE 8888

@@ -17,7 +17,7 @@ UPLOAD_MAX_SIZE = 0  # no upload size limit (set bytes to cap)
 MIN_WIDTH = 1
 MIN_HEIGHT = 1
 # Custom upload handler list: patches video-engine + upload interaction.
-HANDLER_LISTS = ['thumbor.handler_lists.healthcheck', 'thumbor.handler_lists.blacklist', 'nsx_upload_compat']
+HANDLER_LISTS = ['thumbor.handler_lists.healthcheck', 'thumbor.handler_lists.blacklist', 'nsx.upload_compat']
 # --- Sources (regexes match hostname; video-engine loader uses http_loader) ---
 ALLOWED_SOURCES = [
     r'.*\.nsx\.services',
@@ -85,7 +85,7 @@ FILTERS = [
 
 # --- Metrics ---
 # statsd -> statsd_exporter -> Prometheus (see docker/docker-compose.nsx.yaml)
-METRICS = 'nsx_metrics'
+METRICS = 'nsx.metrics'
 STATSD_HOST = 'statsd-exporter'
 STATSD_PORT = 9125  # statsd_exporter TCP listener (UDP lossy in Docker Desktop)
 STATSD_PREFIX = 'thumbor'
