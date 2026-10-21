@@ -14,12 +14,18 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "sum(rate(statsd_thumbor_response_codes_total[5m])) by (code)",
-          "legendFormat": "{{code}}",
+          "expr": "sum(rate(thumbor_response_count[5m]))",
+          "legendFormat": "total",
           "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "sum(rate(thumbor_response_status_500[5m]))",
+          "legendFormat": "5xx",
+          "refId": "B"
         }
       ],
-      "title": "Request Rate by Response Code",
+      "title": "Request Rate (total & 5xx)",
       "type": "timeseries"
     },
     {
@@ -31,24 +37,24 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.5, sum(rate(statsd_thumbor_timing_response_time_bucket[5m])) by (le))",
+          "expr": "thumbor_response_time{quantile=\"0.5\"}",
           "legendFormat": "p50",
           "refId": "A"
         },
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.95, sum(rate(statsd_thumbor_timing_response_time_bucket[5m])) by (le))",
-          "legendFormat": "p95",
+          "expr": "thumbor_response_time{quantile=\"0.9\"}",
+          "legendFormat": "p90",
           "refId": "B"
         },
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "histogram_quantile(0.99, sum(rate(statsd_thumbor_timing_response_time_bucket[5m])) by (le))",
+          "expr": "thumbor_response_time{quantile=\"0.99\"}",
           "legendFormat": "p99",
           "refId": "C"
         }
       ],
-      "title": "Response Time (p50 / p95 / p99)",
+      "title": "Response Time (p50 / p90 / p99)",
       "type": "timeseries"
     },
     {
@@ -60,7 +66,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "sum(rate(statsd_thumbor_response_codes_total{code!~\"5..\"}[5m])) / sum(rate(statsd_thumbor_response_codes_total[5m]))",
+          "expr": "1 - (sum(rate(thumbor_response_status_500[5m])) / sum(rate(thumbor_response_count[5m])))",
           "legendFormat": "success ratio",
           "refId": "A"
         }
@@ -70,25 +76,66 @@
     },
     {
       "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "fieldConfig": { "defaults": { "unit": "Bps" }, "overrides": [] },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
       "id": 4,
       "options": { "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "sum(rate(statsd_thumbor_original_size_total[5m])) by (format)",
-          "legendFormat": "in {{format}}",
+          "expr": "sum(rate(thumbor_response_bytes_jpg[5m]))",
+          "legendFormat": "jpg",
           "refId": "A"
         },
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "sum(rate(statsd_thumbor_served_size_total[5m])) by (format)",
-          "legendFormat": "out {{format}}",
+          "expr": "sum(rate(thumbor_response_bytes_webp[5m]))",
+          "legendFormat": "webp",
           "refId": "B"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "sum(rate(thumbor_response_bytes_mp4[5m]))",
+          "legendFormat": "mp4",
+          "refId": "C"
         }
       ],
-      "title": "Bytes In / Out by Format",
+      "title": "Served Bytes by Format",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+      "id": 5,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "sum(rate(thumbor_response_format_jpg[5m]))",
+          "legendFormat": "jpg",
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "sum(rate(thumbor_response_format_webp[5m]))",
+          "legendFormat": "webp",
+          "refId": "B"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "sum(rate(thumbor_response_format_mp4[5m]))",
+          "legendFormat": "mp4",
+          "refId": "C"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "sum(rate(thumbor_response_format_gif[5m]))",
+          "legendFormat": "gif",
+          "refId": "D"
+        }
+      ],
+      "title": "Response Format Mix",
       "type": "timeseries"
     }
   ],
@@ -115,6 +162,6 @@
   "timezone": "browser",
   "title": "Thumbor — Overview",
   "uid": "nsx-thumbor-overview",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }

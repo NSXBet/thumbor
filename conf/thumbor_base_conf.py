@@ -5,8 +5,8 @@
 
 # --- Security ---
 # SECURITY_KEY can be overridden via env (--use-environment) or secret manager.
-ALLOW_UNSAFE_URLS = False
-
+# 'unsafe' URLs are allowed only for local testing (thumbor.local.conf overrides).
+ALLOW_UNSAFE_URL = False
 # --- Sources (regexes match hostname; video-engine loader uses http_loader) ---
 ALLOWED_SOURCES = [
     r'.*\.nsx\.services',
