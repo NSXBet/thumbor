@@ -1,0 +1,1 @@
+# NSXBet thumbor extensions

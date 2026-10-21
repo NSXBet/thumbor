@@ -36,3 +36,6 @@ opencv
 docs/_build
 test-results
 .coverage*
+
+# mc local alias config (created by `make minio-init`)
+thumbor-local/
